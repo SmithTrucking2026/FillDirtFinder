@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Fill Dirt Finder — Smith Trucking Quote Tool"
+version = "1.0.0"
+id = "artifacts/fill-dirt-finder"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20524
+
+[services.development]
+run = "pnpm --filter @workspace/fill-dirt-finder run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/fill-dirt-finder", "run", "build" ]
+publicDir = "artifacts/fill-dirt-finder/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20524"
+BASE_PATH = "/"
