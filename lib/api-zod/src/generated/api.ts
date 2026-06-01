@@ -267,8 +267,8 @@ export const CalculateQuoteBody = zod.object({
   destLng: zod.number(),
   destLabel: zod.string().nullish(),
   hourlyRateType: zod
-    .enum(["mass_grade", "regular"])
-    .describe("mass_grade=$85\/hr, regular=$95\/hr"),
+    .enum(["mass_grade", "regular", "hourly_rate"])
+    .describe("mass_grade=$85\/hr, regular=$95\/hr, hourly_rate=$100\/hr"),
   marginType: zod
     .enum(["external", "interco"])
     .describe("external=20%, interco=15%"),
@@ -550,8 +550,8 @@ export const ListQuoteLogResponseItem = zod.object({
   pitNameSnapshot: zod.string(),
   loads: zod.number(),
   hourlyRateType: zod
-    .enum(["mass_grade", "regular"])
-    .describe("mass_grade=$85\/hr, regular=$95\/hr"),
+    .enum(["mass_grade", "regular", "hourly_rate"])
+    .describe("mass_grade=$85\/hr, regular=$95\/hr, hourly_rate=$100\/hr"),
   marginType: zod
     .enum(["external", "interco"])
     .describe("external=20%, interco=15%"),
@@ -582,8 +582,8 @@ export const SaveQuoteLogBody = zod.object({
   pitNameSnapshot: zod.string(),
   loads: zod.number().min(1),
   hourlyRateType: zod
-    .enum(["mass_grade", "regular"])
-    .describe("mass_grade=$85\/hr, regular=$95\/hr"),
+    .enum(["mass_grade", "regular", "hourly_rate"])
+    .describe("mass_grade=$85\/hr, regular=$95\/hr, hourly_rate=$100\/hr"),
   marginType: zod
     .enum(["external", "interco"])
     .describe("external=20%, interco=15%"),
@@ -622,8 +622,8 @@ export const UpdateQuoteLogResponse = zod.object({
   pitNameSnapshot: zod.string(),
   loads: zod.number(),
   hourlyRateType: zod
-    .enum(["mass_grade", "regular"])
-    .describe("mass_grade=$85\/hr, regular=$95\/hr"),
+    .enum(["mass_grade", "regular", "hourly_rate"])
+    .describe("mass_grade=$85\/hr, regular=$95\/hr, hourly_rate=$100\/hr"),
   marginType: zod
     .enum(["external", "interco"])
     .describe("external=20%, interco=15%"),
