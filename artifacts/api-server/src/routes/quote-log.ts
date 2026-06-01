@@ -13,7 +13,7 @@ const QuoteStatusEnum = z.enum([
   "withdrawn",
 ]);
 const UserEnum = z.enum(["Alex", "Justin"]);
-const HourlyRateTypeEnum = z.enum(["mass_grade", "regular"]);
+const HourlyRateTypeEnum = z.enum(["mass_grade", "regular", "hourly_rate"]);
 const MarginTypeEnum = z.enum(["external", "interco"]);
 const IntercompanyEnum = z.enum(["Y", "N"]);
 
@@ -29,6 +29,7 @@ const SaveQuoteLogBody = z.object({
   pitId: z.string().uuid(),
   pitNameSnapshot: z.string(),
   loads: z.number().int().min(1),
+  totalLoadQuantity: z.number().int().min(1).nullable().optional(),
   hourlyRateType: HourlyRateTypeEnum,
   marginType: MarginTypeEnum,
   pricePerLoad: z.number().min(0),
@@ -66,6 +67,7 @@ function rowToEntry(row: typeof quoteLogTable.$inferSelect) {
     pitId: row.pitId,
     pitNameSnapshot: row.pitNameSnapshot,
     loads: row.loads,
+    totalLoadQuantity: row.totalLoadQuantity ?? null,
     hourlyRateType: row.hourlyRateType,
     marginType: row.marginType,
     pricePerLoad: row.pricePerLoad,
@@ -112,6 +114,7 @@ router.post("/quote-log", async (req, res) => {
       pitId: body.pitId,
       pitNameSnapshot: body.pitNameSnapshot,
       loads: body.loads,
+      totalLoadQuantity: body.totalLoadQuantity ?? null,
       hourlyRateType: body.hourlyRateType,
       marginType: body.marginType,
       pricePerLoad: body.pricePerLoad,

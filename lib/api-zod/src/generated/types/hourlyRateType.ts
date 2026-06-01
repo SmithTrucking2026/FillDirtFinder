@@ -7,7 +7,7 @@
  */
 
 /**
- * mass_grade=$85/hr, regular=$95/hr
+ * mass_grade=$85/hr, regular=$95/hr, hourly_rate=$100/hr
  */
 export type HourlyRateType =
   (typeof HourlyRateType)[keyof typeof HourlyRateType];
@@ -15,4 +15,5 @@ export type HourlyRateType =
 export const HourlyRateType = {
   mass_grade: "mass_grade",
   regular: "regular",
+  hourly_rate: "hourly_rate",
 } as const;

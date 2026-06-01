@@ -357,6 +357,7 @@ export default function Home() {
                         <SelectContent>
                           <SelectItem value={HourlyRateType.mass_grade}>Mass Grade ($85/hr)</SelectItem>
                           <SelectItem value={HourlyRateType.regular}>Regular ($95/hr)</SelectItem>
+                          <SelectItem value={HourlyRateType.hourly_rate}>Hourly Rate ($100/hr)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -503,6 +504,10 @@ export default function Home() {
                       <div className="flex justify-between font-bold text-base">
                         <span>Total Time / Load</span>
                         <span>{Math.round(quote.totalMinutesPerLoad)} min</span>
+                      </div>
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>Loads / truck / day <span className="text-xs">(9.5 hr day)</span></span>
+                        <span className="font-medium text-foreground">{quote.loadsPerTruckPerDay.toFixed(1)}</span>
                       </div>
                       
                       <div className="pt-4 flex justify-between">

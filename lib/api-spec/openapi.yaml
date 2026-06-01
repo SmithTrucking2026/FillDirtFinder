@@ -278,8 +278,8 @@ components:
       enum: [Alex, Justin]
     HourlyRateType:
       type: string
-      enum: [mass_grade, regular]
-      description: "mass_grade=$85/hr, regular=$95/hr"
+      enum: [mass_grade, regular, hourly_rate]
+      description: "mass_grade=$85/hr, regular=$95/hr, hourly_rate=$100/hr"
     MarginType:
       type: string
       enum: [external, interco]
@@ -416,6 +416,7 @@ components:
       properties:
         massGradeRate: { type: number, minimum: 0 }
         regularRate: { type: number, minimum: 0 }
+        hourlyRate: { type: number, minimum: 0 }
         externalMargin: { type: number, minimum: 0, maximum: 1 }
         intercoMargin: { type: number, minimum: 0, maximum: 1 }
         avgSpeedMph: { type: number, minimum: 5, maximum: 80 }
@@ -425,6 +426,7 @@ components:
       required:
         - massGradeRate
         - regularRate
+        - hourlyRate
         - externalMargin
         - intercoMargin
         - avgSpeedMph
@@ -436,6 +438,7 @@ components:
       properties:
         massGradeRate: { type: number, minimum: 0 }
         regularRate: { type: number, minimum: 0 }
+        hourlyRate: { type: number, minimum: 0 }
         externalMargin: { type: number, minimum: 0, maximum: 1 }
         intercoMargin: { type: number, minimum: 0, maximum: 1 }
         avgSpeedMph: { type: number, minimum: 5, maximum: 80 }
@@ -444,6 +447,7 @@ components:
       required:
         - massGradeRate
         - regularRate
+        - hourlyRate
         - externalMargin
         - intercoMargin
         - avgSpeedMph
@@ -492,6 +496,9 @@ components:
           description: "Which source produced the drive-time used in this quote"
         priceWasOverridden: { type: boolean }
         marketPricePerLoad: { type: number }
+        loadsPerTruckPerDay:
+          type: number
+          description: "Number of loads one truck can complete in a 9.5-hour day"
       required:
         - pit
         - distanceMiles
@@ -513,6 +520,7 @@ components:
         - distanceSource
         - priceWasOverridden
         - marketPricePerLoad
+        - loadsPerTruckPerDay
     QuoteStatus:
       type: string
       enum: [quoted, awarded, lost, pending, withdrawn]
@@ -531,6 +539,10 @@ components:
         pitId: { type: string }
         pitNameSnapshot: { type: string }
         loads: { type: integer }
+        totalLoadQuantity:
+          type: integer
+          nullable: true
+          description: "Total load quantity on the quote (may differ from loads used in pricing)"
         hourlyRateType: { $ref: "#/components/schemas/HourlyRateType" }
         marginType: { $ref: "#/components/schemas/MarginType" }
         pricePerLoad: { type: number }
@@ -571,6 +583,11 @@ components:
         pitId: { type: string }
         pitNameSnapshot: { type: string }
         loads: { type: integer, minimum: 1 }
+        totalLoadQuantity:
+          type: integer
+          minimum: 1
+          nullable: true
+          description: "Total load quantity on the quote (may differ from loads used in pricing)"
         hourlyRateType: { $ref: "#/components/schemas/HourlyRateType" }
         marginType: { $ref: "#/components/schemas/MarginType" }
         pricePerLoad: { type: number, minimum: 0 }

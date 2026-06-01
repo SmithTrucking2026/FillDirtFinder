@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
   id: SETTINGS_ID,
   massGradeRate: 85,
   regularRate: 95,
+  hourlyRate: 100,
   externalMargin: 0.2,
   intercoMargin: 0.15,
   avgSpeedMph: 35,
@@ -42,6 +43,7 @@ function rowToSettings(row: typeof appSettingsTable.$inferSelect) {
   return {
     massGradeRate: row.massGradeRate,
     regularRate: row.regularRate,
+    hourlyRate: row.hourlyRate ?? 100,
     externalMargin: row.externalMargin,
     intercoMargin: row.intercoMargin,
     avgSpeedMph: row.avgSpeedMph,
@@ -241,22 +243,35 @@ router.post("/quote/calculate", async (req, res) => {
   const totalMinutesPerLoad = roundTripMin + loadBuffer;
 
   const hourlyRate =
-    body.hourlyRateType === "mass_grade" ? settings.massGradeRate : settings.regularRate;
+    body.hourlyRateType === "mass_grade"
+      ? settings.massGradeRate
+      : body.hourlyRateType === "hourly_rate"
+        ? settings.hourlyRate
+        : settings.regularRate;
   const marginPercent =
     body.marginType === "external" ? settings.externalMargin : settings.intercoMargin;
 
   const truckingPerLoad = (totalMinutesPerLoad / 60) * hourlyRate;
-  const truckingWithMargin = truckingPerLoad * (1 + marginPercent);
+  // True margin: divide by inverse — e.g. 20% margin means cost / 0.80
+  const truckingWithMargin = truckingPerLoad / (1 - marginPercent);
 
   const marketPricePerLoad = pit.pricePerLoad;
   const priceWasOverridden =
     body.overridePricePerLoad !== undefined && body.overridePricePerLoad !== null;
   const materialPerLoad = priceWasOverridden ? body.overridePricePerLoad! : marketPricePerLoad;
 
-  const subtotalPerLoad = truckingWithMargin + materialPerLoad;
+  // Only mark up 3rd-party material; Smith pit material (inner dirt override) is used at cost
+  const materialWithMargin = priceWasOverridden
+    ? materialPerLoad
+    : materialPerLoad / (1 - marginPercent);
+
+  const subtotalPerLoad = truckingWithMargin + materialWithMargin;
   const taxPerLoad = subtotalPerLoad * pit.countyTaxRate;
   const totalPerLoad = subtotalPerLoad + taxPerLoad;
   const grandTotal = totalPerLoad * body.loads;
+
+  // Loads one truck can complete in a 9.5-hour work day
+  const loadsPerTruckPerDay = (9.5 * 60) / totalMinutesPerLoad;
 
   const round2 = (n: number) => Number(n.toFixed(2));
 
@@ -272,7 +287,7 @@ router.post("/quote/calculate", async (req, res) => {
     countyTaxRate: pit.countyTaxRate,
     truckingPerLoad: round2(truckingPerLoad),
     truckingWithMarginPerLoad: round2(truckingWithMargin),
-    materialPerLoad: round2(materialPerLoad),
+    materialPerLoad: round2(materialWithMargin),
     subtotalPerLoad: round2(subtotalPerLoad),
     taxPerLoad: round2(taxPerLoad),
     totalPerLoad: round2(totalPerLoad),
@@ -281,6 +296,7 @@ router.post("/quote/calculate", async (req, res) => {
     distanceSource,
     priceWasOverridden,
     marketPricePerLoad: round2(marketPricePerLoad),
+    loadsPerTruckPerDay: round2(loadsPerTruckPerDay),
   });
 });
 
@@ -297,6 +313,7 @@ router.put("/settings", async (req, res) => {
     .set({
       massGradeRate: body.massGradeRate,
       regularRate: body.regularRate,
+      hourlyRate: body.hourlyRate,
       externalMargin: body.externalMargin,
       intercoMargin: body.intercoMargin,
       avgSpeedMph: body.avgSpeedMph,

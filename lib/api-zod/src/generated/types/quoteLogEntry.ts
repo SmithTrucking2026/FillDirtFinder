@@ -24,6 +24,8 @@ export interface QuoteLogEntry {
   pitId: string;
   pitNameSnapshot: string;
   loads: number;
+  /** Total load quantity on the quote (may differ from loads used in pricing) */
+  totalLoadQuantity?: number | null;
   hourlyRateType: HourlyRateType;
   marginType: MarginType;
   pricePerLoad: number;

@@ -12,6 +12,8 @@ export interface AppSettings {
   massGradeRate: number;
   /** @minimum 0 */
   regularRate: number;
+  /** @minimum 0 */
+  hourlyRate: number;
   /**
    * @minimum 0
    * @maximum 1

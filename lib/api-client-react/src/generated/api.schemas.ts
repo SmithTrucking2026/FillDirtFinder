@@ -17,7 +17,7 @@ export const User = {
 } as const;
 
 /**
- * mass_grade=$85/hr, regular=$95/hr
+ * mass_grade=$85/hr, regular=$95/hr, hourly_rate=$100/hr
  */
 export type HourlyRateType =
   (typeof HourlyRateType)[keyof typeof HourlyRateType];
@@ -25,6 +25,7 @@ export type HourlyRateType =
 export const HourlyRateType = {
   mass_grade: "mass_grade",
   regular: "regular",
+  hourly_rate: "hourly_rate",
 } as const;
 
 /**
@@ -168,6 +169,8 @@ export interface AppSettings {
   massGradeRate: number;
   /** @minimum 0 */
   regularRate: number;
+  /** @minimum 0 */
+  hourlyRate: number;
   /**
    * @minimum 0
    * @maximum 1
@@ -194,6 +197,8 @@ export interface UpsertSettingsInput {
   massGradeRate: number;
   /** @minimum 0 */
   regularRate: number;
+  /** @minimum 0 */
+  hourlyRate: number;
   /**
    * @minimum 0
    * @maximum 1
@@ -268,6 +273,8 @@ export interface QuoteResult {
   distanceSource: QuoteResultDistanceSource;
   priceWasOverridden: boolean;
   marketPricePerLoad: number;
+  /** Number of loads one truck can complete in a 9.5-hour day */
+  loadsPerTruckPerDay: number;
 }
 
 export type QuoteStatus = (typeof QuoteStatus)[keyof typeof QuoteStatus];
@@ -301,6 +308,8 @@ export interface QuoteLogEntry {
   pitId: string;
   pitNameSnapshot: string;
   loads: number;
+  /** Total load quantity on the quote (may differ from loads used in pricing) */
+  totalLoadQuantity?: number | null;
   hourlyRateType: HourlyRateType;
   marginType: MarginType;
   pricePerLoad: number;
@@ -334,6 +343,11 @@ export interface SaveQuoteLogInput {
   pitNameSnapshot: string;
   /** @minimum 1 */
   loads: number;
+  /**
+   * Total load quantity on the quote (may differ from loads used in pricing)
+   * @minimum 1
+   */
+  totalLoadQuantity?: number | null;
   hourlyRateType: HourlyRateType;
   marginType: MarginType;
   /** @minimum 0 */

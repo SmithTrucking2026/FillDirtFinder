@@ -30,4 +30,6 @@ export interface QuoteResult {
   distanceSource: QuoteResultDistanceSource;
   priceWasOverridden: boolean;
   marketPricePerLoad: number;
+  /** Number of loads one truck can complete in a 9.5-hour day */
+  loadsPerTruckPerDay: number;
 }

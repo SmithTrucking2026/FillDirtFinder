@@ -24,6 +24,11 @@ export interface SaveQuoteLogInput {
   pitNameSnapshot: string;
   /** @minimum 1 */
   loads: number;
+  /**
+   * Total load quantity on the quote (may differ from loads used in pricing)
+   * @minimum 1
+   */
+  totalLoadQuantity?: number | null;
   hourlyRateType: HourlyRateType;
   marginType: MarginType;
   /** @minimum 0 */

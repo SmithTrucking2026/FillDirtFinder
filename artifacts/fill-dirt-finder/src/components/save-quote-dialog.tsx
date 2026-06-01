@@ -43,6 +43,7 @@ export function SaveQuoteDialog(props: SaveQuoteDialogProps) {
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [isIntercompany, setIsIntercompany] = useState<"Y" | "N">("N");
+  const [totalLoadQuantity, setTotalLoadQuantity] = useState<string>("");
   const [notes, setNotes] = useState("");
 
   const save = useMutation({
@@ -64,6 +65,7 @@ export function SaveQuoteDialog(props: SaveQuoteDialogProps) {
           pitId: props.pitId,
           pitNameSnapshot: props.pitName,
           loads: props.loads,
+          totalLoadQuantity: totalLoadQuantity ? parseInt(totalLoadQuantity) : null,
           hourlyRateType: props.hourlyRateType,
           marginType: props.marginType,
           pricePerLoad: props.pricePerLoad,
@@ -83,6 +85,7 @@ export function SaveQuoteDialog(props: SaveQuoteDialogProps) {
       setContactName("");
       setContactPhone("");
       setIsIntercompany("N");
+      setTotalLoadQuantity("");
       setNotes("");
     },
     onError: (err: Error) => {
@@ -148,6 +151,17 @@ export function SaveQuoteDialog(props: SaveQuoteDialogProps) {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="total-load-qty">Total load quantity on quote</Label>
+            <Input
+              id="total-load-qty"
+              type="number"
+              min="1"
+              value={totalLoadQuantity}
+              onChange={(e) => setTotalLoadQuantity(e.target.value)}
+              placeholder="e.g. 250"
+            />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1">

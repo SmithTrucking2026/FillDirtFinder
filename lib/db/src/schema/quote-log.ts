@@ -13,6 +13,7 @@ export const quoteLogTable = pgTable("quote_log", {
   pitId: uuid("pit_id").notNull(),
   pitNameSnapshot: text("pit_name_snapshot").notNull(),
   loads: integer("loads").notNull(),
+  totalLoadQuantity: integer("total_load_quantity"),
   hourlyRateType: text("hourly_rate_type").notNull(),
   marginType: text("margin_type").notNull(),
   pricePerLoad: real("price_per_load").notNull(),

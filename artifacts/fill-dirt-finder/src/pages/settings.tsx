@@ -16,6 +16,7 @@ import { Loader2, RotateCcw, Settings2 } from "lucide-react";
 const settingsSchema = z.object({
   massGradeRate: z.coerce.number().min(0, "Must be positive"),
   regularRate: z.coerce.number().min(0, "Must be positive"),
+  hourlyRate: z.coerce.number().min(0, "Must be positive"),
   externalMargin: z.coerce.number().min(0).max(100),
   intercoMargin: z.coerce.number().min(0).max(100),
   avgSpeedMph: z.coerce.number().min(5).max(80),
@@ -27,6 +28,7 @@ type SettingsFormValues = z.infer<typeof settingsSchema>;
 const DEFAULT_SETTINGS: SettingsFormValues = {
   massGradeRate: 85,
   regularRate: 95,
+  hourlyRate: 100,
   externalMargin: 20,
   intercoMargin: 15,
   avgSpeedMph: 35,
@@ -54,6 +56,7 @@ export default function SettingsPage() {
       form.reset({
         massGradeRate: settings.massGradeRate,
         regularRate: settings.regularRate,
+        hourlyRate: settings.hourlyRate,
         externalMargin: settings.externalMargin * 100,
         intercoMargin: settings.intercoMargin * 100,
         avgSpeedMph: settings.avgSpeedMph,
@@ -69,6 +72,7 @@ export default function SettingsPage() {
       data: {
         massGradeRate: values.massGradeRate,
         regularRate: values.regularRate,
+        hourlyRate: values.hourlyRate,
         externalMargin: values.externalMargin / 100,
         intercoMargin: values.intercoMargin / 100,
         avgSpeedMph: values.avgSpeedMph,
@@ -151,6 +155,19 @@ export default function SettingsPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Regular Hourly Rate ($/hr)</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="hourlyRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hourly Rate ($/hr)</FormLabel>
                           <FormControl>
                             <Input type="number" step="0.01" {...field} />
                           </FormControl>
